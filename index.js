@@ -22,9 +22,9 @@ function createBot() {
       console.log('Bot đã vào server!')
       
       let angle = 0
-      const radius = 1
+      const radius = 5
       const speed = 0.05
-      const height = 70
+      const height = 80
 
       setInterval(() => {
         const centerX = bot.entity.position.x
