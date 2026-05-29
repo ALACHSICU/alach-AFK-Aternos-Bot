@@ -22,7 +22,7 @@ function createBot() {
       console.log('Bot đã vào server!')
       
       let angle = 0
-      const radius = 5
+      const radius = 1
       const speed = 0.05
       const height = 80
 
