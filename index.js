@@ -1,3 +1,13 @@
+const mineflayer = require('mineflayer')
+const http = require('http')
+
+// HTTP server để Render không tắt
+http.createServer((req, res) => {
+  res.end('Bot đang chạy!')
+}).listen(3000, () => {
+  console.log('HTTP server chạy trên port 3000')
+})
+
 function createBot() {
   console.log('Đợi 10 giây trước khi kết nối...')
   setTimeout(() => {
@@ -40,5 +50,7 @@ function createBot() {
       setTimeout(createBot, 10000)
     })
 
-  }, 10000) // delay 10 giây
+  }, 10000)
 }
+
+createBot()
