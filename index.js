@@ -24,7 +24,7 @@ function createBot() {
       let angle = 0
       const radius = 1
       const speed = 0.05
-      const height = 80
+      const height = 70
 
       setInterval(() => {
         const centerX = bot.entity.position.x
