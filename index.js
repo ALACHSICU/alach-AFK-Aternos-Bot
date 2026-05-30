@@ -7,10 +7,17 @@ http.createServer((req, res) => {
   console.log('HTTP server chạy trên port 3000')
 })
 
+let botInstance = null
+let isConnecting = false
+
 function createBot() {
+  if (isConnecting) return
+  isConnecting = true
+
   console.log('Đợi 10 giây trước khi kết nối...')
   setTimeout(() => {
     console.log('Đang kết nối đến server...')
+    
     const bot = mineflayer.createBot({
       host: 'quanvaloc.aternos.me',
       port: 11365,
@@ -18,46 +25,46 @@ function createBot() {
       version: '1.21.11'
     })
 
+    botInstance = bot
+
     bot.on('login', () => {
       console.log('Bot đã login thành công!')
+      isConnecting = false
     })
 
     bot.on('spawn', () => {
       console.log('Bot đã vào server!')
-      
-      let angle = 0
-      const radius = 5
-      const speed = 0.05
-      const height = 80
+
+      // Di chuyển nhẹ thay vì bay vòng tròn nhanh
+      setInterval(() => {
+        bot.setControlState('jump', true)
+        setTimeout(() => bot.setControlState('jump', false), 500)
+      }, 30000) // nhảy mỗi 30 giây
 
       setInterval(() => {
-        const centerX = bot.entity.position.x
-        const centerZ = bot.entity.position.z
-        
-        const x = centerX + radius * Math.cos(angle)
-        const z = centerZ + radius * Math.sin(angle)
-
-        bot.entity.position.set(x, height, z)
-        bot.look(angle + Math.PI / 2, 0)
-
-        angle += speed
-        if (angle >= Math.PI * 2) angle = 0
-      }, 50)
+        bot.look(bot.entity.yaw + 0.5, 0, true)
+      }, 5000) // xoay nhẹ mỗi 5 giây
     })
 
     bot.on('kicked', (reason) => {
       console.log('Bị kick, lý do:', JSON.stringify(reason))
-      setTimeout(createBot, 10000)
+      botInstance = null
+      isConnecting = false
+      setTimeout(createBot, 15000)
     })
 
     bot.on('error', (err) => {
       console.log('Lỗi:', err.message)
-      setTimeout(createBot, 10000)
+      botInstance = null
+      isConnecting = false
+      setTimeout(createBot, 15000)
     })
 
     bot.on('end', (reason) => {
       console.log('Kết nối kết thúc, lý do:', reason)
-      setTimeout(createBot, 10000)
+      botInstance = null
+      isConnecting = false
+      setTimeout(createBot, 15000)
     })
 
   }, 10000)
